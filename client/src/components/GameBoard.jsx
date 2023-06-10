@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import Card from './Card.jsx';
-import './GameBoard.css';
-import GameFinished from './GameFinished.jsx';
+import React, { useState, useEffect } from "react";
+import Card from "./Card.jsx";
+import "./GameBoard.css";
+import GameFinished from "./GameFinished.jsx";
 
 const GameBoard = ({ game }) => {
   const [text, setText] = useState([]);
@@ -42,9 +42,9 @@ const GameBoard = ({ game }) => {
 
   const checkMatch = (firstImageUrl, secondImageUrl) => {
     if (!game.checkMatch(firstImageUrl, secondImageUrl)) {
-      setIsMatch('not a match');
+      setIsMatch("not a match");
     } else {
-      setIsMatch('match');
+      setIsMatch("match");
       setMatches(game.matches.length);
     }
   };
@@ -84,7 +84,7 @@ const GameBoard = ({ game }) => {
   }, [game.board]);
 
   useEffect(() => {
-    if (matches === game.board.length / 2 && isMatch === 'match') {
+    if (matches === game.board.length / 2 && isMatch === "match") {
       setTimeout(() => {
         setIsWon(true);
       }, 2000);
