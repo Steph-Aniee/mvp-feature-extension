@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 import "./GameBoard.css";
 import GameFinished from "./GameFinished.jsx";
+//Steph: Importing wildcard
+import WildCard from "./WildCard.jsx";
 
 const GameBoard = ({ game }) => {
   const [text, setText] = useState([]);
@@ -97,17 +99,30 @@ const GameBoard = ({ game }) => {
         <GameFinished />
       ) : (
         <div className="gameBoard" id="gameBoard">
-          {game.board.map((element, index) => (
-            <Card
-              key={index}
-              imgSrc={element.image_url}
-              text={text[index]}
-              board={game.board}
-              handleCardClickCallback={() => handleCardClickCallback(index)}
-              isMatch={isMatch}
-              disableClicks={disableClicks} // Pass the disableClicks state as a prop
-            />
-          ))}
+          {game.board.map((element, index) => {
+            // Steph: basically copying your code and rendering the wildcard
+            if (element.isWildcard) {
+              return (
+                <WildCard
+                  key={index}
+                  handleCardClickCallback={() => handleCardClickCallback(index)}
+                  disableClicks={disableClicks}
+                />
+              );
+            } else {
+              return (
+                <Card
+                  key={index}
+                  imgSrc={element.image_url}
+                  text={text[index]}
+                  board={game.board}
+                  handleCardClickCallback={() => handleCardClickCallback(index)}
+                  isMatch={isMatch}
+                  disableClicks={disableClicks} // Pass the disableClicks state as a prop
+                />
+              );
+            }
+          })}
         </div>
       )}
     </>

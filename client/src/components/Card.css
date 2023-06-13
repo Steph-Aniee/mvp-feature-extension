@@ -108,6 +108,10 @@
   .card-text {
     font-size: 2rem;
   }
+
+  .wildcard-text {
+    font-size: 2rem;
+  }
 }
 
 @media (min-width: 1025px) {
@@ -146,4 +150,17 @@
   .card-text {
     font-size: 3.2rem;
   }
+
+  .wildcard-text {
+    font-size: 3.2rem;
+  }
+}
+
+/* wildcard attributes */
+
+.wild-card-image {
+  width: 85%;
+  height: 85%;
+  padding-top: 6%; /* Steph: trying to somewhat position the image in the middle of the card */
+  padding-left: 2%; /* ... here too */
 }
