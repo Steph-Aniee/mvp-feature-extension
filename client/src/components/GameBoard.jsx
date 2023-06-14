@@ -93,6 +93,8 @@ const GameBoard = ({ game }) => {
     }
   }, [matches, isMatch]);
 
+  console.log(game.board);
+
   return (
     <>
       {isWon ? (
@@ -106,7 +108,10 @@ const GameBoard = ({ game }) => {
                 <WildCard
                   key={index}
                   handleCardClickCallback={() => handleCardClickCallback(index)}
+                  isMatch={isMatch}
                   disableClicks={disableClicks}
+                  board={game.board}
+                  cardsClicked={cardsClicked}
                 />
               );
             } else {
