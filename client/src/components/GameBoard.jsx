@@ -93,8 +93,6 @@ const GameBoard = ({ game }) => {
     }
   }, [matches, isMatch]);
 
-  console.log(game.board);
-
   return (
     <>
       {isWon ? (
