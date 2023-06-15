@@ -15,9 +15,48 @@ const GameBoard = ({ game }) => {
   const [matches, setMatches] = useState(null);
   const [isWon, setIsWon] = useState(false);
   const [disableClicks, setDisableClicks] = useState(false); // New state variable
+  //Steph: mapping down the elements that have been paired up already and which ones not
+  const matchedPaires = game.matches.map((e) => e); //this will give me the URLs of the matched pairs
+  const unmatchedPaires = [];
+
+  game.board.map((e) => {
+    if (!matchedPaires.includes(e.image_url)) {
+      // fix whatever is making the isWon state to not work anymore!!!!
+      let copyUnmatchedItem = {};
+      copyUnmatchedItem = e;
+      unmatchedPaires.push(copyUnmatchedItem);
+    }
+  });
+
+  console.log(unmatchedPaires);
+  console.log(matchedPaires);
+
+  //Steph: added new function to implement if wildcard was clicked
+  const handleWildCardClick = () => {
+    if (cardsClicked.first === null) {
+      // then access the first card that has not been matched yet and find its pair and then do this:
+      /*         setCardsClicked(() => ({
+        first: indexofFirstUnmatchedCard,
+        second: matchingSecondCard
+      }));
+      } else if (cardsClicked.first !== null && cardsClicked.second === null) {
+        setCardsClicked((prevState) => ({
+          ...prevState,
+          second: matchingSecondCardOfWhicheverCardWasClickedFirst,
+        })); */
+    }
+  };
 
   const handleCardClickCallback = (index) => {
     if (disableClicks) return; // Return early if clicks are disabled
+
+    //Steph: check if wildcard was clicked! if yes, only then go into the logic of the wildcard
+    if (
+      game.board[index].image_url ===
+      "https://cdn.bfldr.com/Z0BJ31FP/at/vjc7chngjc36vgpxmr3fhm7x/golden-card-icon.svg"
+    ) {
+      handleWildCardClick();
+    }
 
     if (cardsClicked.first === null) {
       setCardsClicked((prevState) => ({
@@ -110,6 +149,7 @@ const GameBoard = ({ game }) => {
                   disableClicks={disableClicks}
                   board={game.board}
                   cardsClicked={cardsClicked}
+                  setCardsClicked={setCardsClicked}
                 />
               );
             } else {

@@ -12,6 +12,7 @@ function Card({
   isMatch,
   board,
   cardsClicked,
+  setCardsClicked,
 }) {
   const [isCardFlipped, setCardFlipped] = useState(false);
   const [backImageUrl, setBackImageUrl] = useState(
@@ -22,7 +23,6 @@ function Card({
     if (disableClicks) return; // Return early if clicks are disabled
 
     setCardFlipped(true);
-    handleCardClickCallback();
   };
 
   useEffect(() => {
@@ -33,14 +33,16 @@ function Card({
       // then I want to pass either of these props and grab the array here to then pick one item OR one item plus its match to then send the index/indices to the handleCardClickCallback in GameBoard.jsx
       // because, depending on one the wildcard is clicked (as first or second item), I want the following:
       /* 
-      1. If I clicked just the wildcard and no first card before that:
-      -> I want to set the first key in the cardsClicked-hook to null
+      1. If I clicked just the wildcard and no first card before that: 
+     ( -> I want to set the first key in the cardsClicked-hook to null.. nope, this does not work well as it will lead to the wildcard flipping to the backside again)
       -> Then filter through game.board for where this applies: !game.match.includes(element.url) and find(it's a method that returns the first item to which set parameters apply) just the first item in the list
       -> Then find its matching ID partner (it must have a different index!!) and send both those indices (one after the other) to the handleClickCallback in the GameBoard.jsx file
       2. If a card has been previously clicked before the wildcard
       -> I want to set the cardsClicked-hook's second item to null immediately before anything else happens
       -> Then I want to check the ID of the first card and look for the matching ID in the game.board - again, I must search for the same ID with a different index!!!
       -> Then this time just send the second card to the handleClickCallback function on the GameBoard
+
+      -> need to add this function then at last when first and second index are well defined in the cardsClicked: handleCardClickCallback();
       */
     }
   }, [isCardFlipped]);
