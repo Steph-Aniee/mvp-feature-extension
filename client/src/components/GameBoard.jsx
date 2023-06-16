@@ -34,28 +34,43 @@ const GameBoard = ({ game }) => {
 
   //Steph: added new function to implement if wildcard was clicked
   const handleWildCardClick = () => {
-    if (cardsClicked.first === null) {
-      // then access the first card that has not been matched yet and find its pair and then do this:
-      /*         setCardsClicked(() => ({
-        first: indexofFirstUnmatchedCard,
-        second: matchingSecondCard
+    if (unmatchedPaires.length > 0) {
+      if (cardsClicked.first === null) {
+        // access the first card that has not been matched yet
+        const firstPart = unmatchedPaires[0];
+        //find it plus its pair in the game board and push into a new array
+        const bothParts = [];
+        bothParts.push(
+          game.board.filter((e) => e.image_url === firstPart.image_url)
+        );
+        console.log(bothParts[0], bothParts[1]); //Steph: nothing happening here
+        //then re-use Judith's code:
+        setCardsClicked(() => ({
+          first: bothParts[0],
+          second: bothParts[1],
+        }));
+      }
+    } else if (cardsClicked.first !== null && cardsClicked.second === null) {
+      // this means the first clicked card already gives away which second part to look for
+      // so we access it
+      console.log(game.board[cardsClicked.first]);
+      const secondPart = game.board.filter(
+        (e, i) =>
+          e[i].image_url === game.board[cardsClicked.first].image_url &&
+          e[i] !== game.board[cardsClicked.first]
+      );
+      setCardsClicked((prevState) => ({
+        ...prevState,
+        second: indexOf(secondPart),
       }));
-      } else if (cardsClicked.first !== null && cardsClicked.second === null) {
-        setCardsClicked((prevState) => ({
-          ...prevState,
-          second: matchingSecondCardOfWhicheverCardWasClickedFirst,
-        })); */
     }
   };
 
   const handleCardClickCallback = (index) => {
     if (disableClicks) return; // Return early if clicks are disabled
-
     //Steph: check if wildcard was clicked! if yes, only then go into the logic of the wildcard
-    if (
-      game.board[index].image_url ===
-      "https://cdn.bfldr.com/Z0BJ31FP/at/vjc7chngjc36vgpxmr3fhm7x/golden-card-icon.svg"
-    ) {
+    if (game.board[index].image_url.includes("golden-card-icon.svg")) {
+      console.log("YES"); //Steph: just checking if this line of code executes
       handleWildCardClick();
     }
 
@@ -149,6 +164,7 @@ const GameBoard = ({ game }) => {
                 <WildCard
                   key={index}
                   handleCardClickCallback={() => handleCardClickCallback(index)}
+                  handleWildCardClick={handleWildCardClick}
                   isMatch={isMatch}
                   disableClicks={disableClicks}
                   board={game.board}
