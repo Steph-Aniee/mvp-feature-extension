@@ -20,11 +20,12 @@ const GameBoard = ({ game }) => {
   const unmatchedPaires = [];
 
   game.board.map((e) => {
-    if (!matchedPaires.includes(e.image_url)) {
-      // fix whatever is making the isWon state to not work anymore!!!!
-      let copyUnmatchedItem = {};
-      copyUnmatchedItem = e;
-      unmatchedPaires.push(copyUnmatchedItem);
+    if (
+      !matchedPaires.includes(e.image_url) &&
+      e.image_url !==
+        "https://cdn.bfldr.com/Z0BJ31FP/at/vjc7chngjc36vgpxmr3fhm7x/golden-card-icon.svg"
+    ) {
+      unmatchedPaires.push(e);
     }
   });
 
@@ -77,14 +78,16 @@ const GameBoard = ({ game }) => {
       second: null,
     });
 
-    setIsMatch(null);
     setDisableClicks(false); // Re-enable clicks after resetting
+    setIsMatch(null);
   };
 
-  const checkMatch = (firstImageUrl, secondImageUrl) => {
+  const checkMatches = (firstImageUrl, secondImageUrl) => {
+    //Steph: changed the name of this function from checkMatch to checkMatches, because I think this was causing a glitch on my computer when the method in the next line was called
     if (!game.checkMatch(firstImageUrl, secondImageUrl)) {
       setIsMatch("not a match");
     } else {
+      console.log("Match"); //Steph: No idea why, but there was a glitch where without the console.log, isMatch is never set to "match" even though setMatches(game.matches.length) is updated! No idea why, so I'm leaving the console.log for now
       setIsMatch("match");
       setMatches(game.matches.length);
     }
@@ -110,7 +113,7 @@ const GameBoard = ({ game }) => {
       const firstImageUrl = game.board[cardsClicked.first].image_url;
       const secondImageUrl = game.board[cardsClicked.second].image_url;
 
-      checkMatch(firstImageUrl, secondImageUrl);
+      checkMatches(firstImageUrl, secondImageUrl);
 
       setDisableClicks(true); // Disable clicks during the delay
 
@@ -125,7 +128,8 @@ const GameBoard = ({ game }) => {
   }, [game.board]);
 
   useEffect(() => {
-    if (matches === game.board.length / 2 && isMatch === "match") {
+    //Steph: Add minus 1 here in the calculation to not count the wildcard
+    if (matches === (game.board.length - 1) / 2 && isMatch === "match") {
       setTimeout(() => {
         setIsWon(true);
       }, 2000);
