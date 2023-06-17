@@ -16,52 +16,54 @@ const GameBoard = ({ game }) => {
   const [isWon, setIsWon] = useState(false);
   const [disableClicks, setDisableClicks] = useState(false); // New state variable
   //Steph: mapping down the elements that have been paired up already and which ones not
-  const matchedPaires = game.matches.map((e) => e); //this will give me the URLs of the matched pairs
-  const unmatchedPaires = [];
+  const matchedPairs = game.matches.map((e) => e); //this will give me the URLs of the matched pairs
+  const unmatchedPairs = [];
 
   game.board.map((e) => {
     if (
-      !matchedPaires.includes(e.image_url) &&
+      !matchedPairs.includes(e.image_url) &&
       e.image_url !==
         "https://cdn.bfldr.com/Z0BJ31FP/at/vjc7chngjc36vgpxmr3fhm7x/golden-card-icon.svg"
     ) {
-      unmatchedPaires.push(e);
+      unmatchedPairs.push(e);
     }
   });
 
-  console.log(unmatchedPaires);
-  console.log(matchedPaires);
+  console.log(unmatchedPairs);
+  console.log(matchedPairs);
 
   //Steph: added new function to implement if wildcard was clicked
   const handleWildCardClick = () => {
-    if (unmatchedPaires.length > 0) {
-      if (cardsClicked.first === null) {
-        // access the first card that has not been matched yet
-        const firstPart = unmatchedPaires[0];
-        //find it plus its pair in the game board and push into a new array
-        const bothParts = [];
-        bothParts.push(
-          game.board.filter((e) => e.image_url === firstPart.image_url)
-        );
-        console.log(bothParts[0], bothParts[1]); //Steph: nothing happening here
+    if (cardsClicked.first === null && unmatchedPairs.length > 0) {
+      // access the first card that has not been matched yet
+      const findPairs = unmatchedPairs[0];
+      //find it plus its pair in the game board and push into a new array
+      const matchingParts = game.board.filter(
+        (e) => e.image_url === findPairs.image_url
+      );
+      console.log(findPairs, matchingParts); //Steph: log is working now
+      if (matchingParts) {
+        // ideally, matchingParts should consist of two elements
+        const firstCardIndex = game.board.indexOf(matchingParts[0]);
+        const secondCardIndex = game.board.indexOf(matchingParts[1]);
         //then re-use Judith's code:
         setCardsClicked(() => ({
-          first: bothParts[0],
-          second: bothParts[1],
+          first: firstCardIndex,
+          second: secondCardIndex,
         }));
       }
     } else if (cardsClicked.first !== null && cardsClicked.second === null) {
       // this means the first clicked card already gives away which second part to look for
       // so we access it
-      console.log(game.board[cardsClicked.first]);
+      console.log(game.board[cardsClicked.first]); //Steph: this log is also working correctly now
       const secondPart = game.board.filter(
-        (e, i) =>
-          e[i].image_url === game.board[cardsClicked.first].image_url &&
-          e[i] !== game.board[cardsClicked.first]
+        (e) =>
+          e.image_url === game.board[cardsClicked.first].image_url &&
+          game.board.indexOf(e) !== cardsClicked.first
       );
       setCardsClicked((prevState) => ({
         ...prevState,
-        second: indexOf(secondPart),
+        second: game.board.indexOf(secondPart),
       }));
     }
   };
@@ -180,6 +182,7 @@ const GameBoard = ({ game }) => {
                   text={text[index]}
                   board={game.board}
                   handleCardClickCallback={() => handleCardClickCallback(index)}
+                  handleWildCardClick={handleWildCardClick}
                   isMatch={isMatch}
                   disableClicks={disableClicks} // Pass the disableClicks state as a prop
                 />
