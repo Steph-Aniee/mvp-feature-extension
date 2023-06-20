@@ -6,7 +6,7 @@ import CardBack from "./CardBack";
 // Data
 import { Animals } from "./animals";
 
-function Card({
+function WildCard({
   handleCardClickCallback,
   disableClicks,
   isMatch,
@@ -29,7 +29,7 @@ function Card({
   useEffect(() => {
     if (isCardFlipped) {
       console.log("wildcard flipped!");
-      handleCardClickCallback();
+      handleWildCardClick();
     }
   }, [isCardFlipped]);
 
@@ -47,4 +47,4 @@ function Card({
   );
 }
 
-export default Card;
+export default WildCard;

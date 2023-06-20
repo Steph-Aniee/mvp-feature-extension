@@ -53,18 +53,28 @@ const GameBoard = ({ game }) => {
         }));
       }
     } else if (cardsClicked.first !== null && cardsClicked.second === null) {
-      // this means the first clicked card already gives away which second part to look for
-      // so we access it
-      console.log(game.board[cardsClicked.first]); //Steph: this log is also working correctly now
-      const secondPart = game.board.filter(
-        (e) =>
-          e.image_url === game.board[cardsClicked.first].image_url &&
-          game.board.indexOf(e) !== cardsClicked.first
-      );
-      setCardsClicked((prevState) => ({
-        ...prevState,
-        second: game.board.indexOf(secondPart),
-      }));
+      // Find the second part based on the image_url of the first part
+      //I got stuck here for a bit until I found out that the indexOf()-method does not work on an array of objects...
+      const firstPartImageUrl = game.board[cardsClicked.first].image_url;
+      let secondPartIndex = null;
+
+      for (let i = 0; i < game.board.length; i++) {
+        const currentPart = game.board[i];
+        if (
+          currentPart.image_url === firstPartImageUrl &&
+          i !== cardsClicked.first
+        ) {
+          secondPartIndex = i;
+          break; // just to stop the lop once the second index/match of this card is found
+        }
+      }
+
+      if (secondPartIndex !== null) {
+        setCardsClicked((prevState) => ({
+          ...prevState,
+          second: secondPartIndex,
+        }));
+      }
     }
   };
 
