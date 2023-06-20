@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import './Card.css';
-import CardFront from './CardFront';
-import CardBack from './CardBack';
+import React, { useState, useEffect } from "react";
+import "./Card.css";
+import CardFront from "./CardFront";
+import CardBack from "./CardBack";
 
 // Data
-import { Animals } from './animals';
+import { Animals } from "./animals";
 
 function Card({
   imgSrc,
@@ -13,17 +13,17 @@ function Card({
   isMatch,
   disableClicks,
 }) {
-  const [isCardFlipped, setCardFlipped] = useState(false);
+  const [isCardTurned, setCardTurned] = useState(false);
   const [matchedFound, setMatchedFound] = useState(false);
   const [backImageUrl, setBackImageUrl] = useState(
     Animals[Math.floor(Math.random() * Animals.length)].image_url
   );
 
-  const handleCardClick = () => {
+  const handleCardClick = (index) => {
     if (disableClicks) return; // Return early if clicks are disabled
 
-    setCardFlipped(true);
-    handleCardClickCallback();
+    setCardTurned(true);
+    handleCardClickCallback(index);
   };
 
   useEffect(() => {
@@ -31,20 +31,20 @@ function Card({
       return;
     }
 
-    if (isCardFlipped) {
-      if (isMatch === 'not a match') {
+    if (isCardTurned) {
+      if (isMatch === "not a match") {
         setTimeout(() => {
-          setCardFlipped(false);
+          setCardTurned(false);
         }, 2000);
-      } else if (isMatch === 'match') {
+      } else if (isMatch === "match") {
         setMatchedFound(true);
       }
     }
-  }, [isCardFlipped, isMatch]);
+  }, [isCardTurned, isMatch]);
 
   return (
     <div className="cards" onClick={handleCardClick}>
-      {isCardFlipped ? (
+      {isCardTurned ? (
         <CardFront text={text} imgSrc={imgSrc} />
       ) : (
         <CardBack backImageUrl={backImageUrl} />

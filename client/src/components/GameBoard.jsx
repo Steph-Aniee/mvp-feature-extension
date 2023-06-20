@@ -70,6 +70,7 @@ const GameBoard = ({ game }) => {
       }
 
       if (secondPartIndex !== null) {
+        console.log(game.board[cardsClicked.first]);
         setCardsClicked((prevState) => ({
           ...prevState,
           second: secondPartIndex,
