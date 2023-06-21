@@ -12,6 +12,8 @@ function Card({
   handleCardClickCallback,
   isMatch,
   disableClicks,
+  cardKey,
+  fakeCardClicked,
 }) {
   const [isCardTurned, setCardTurned] = useState(false);
   const [matchedFound, setMatchedFound] = useState(false);
@@ -25,6 +27,12 @@ function Card({
     setCardTurned(true);
     handleCardClickCallback(index);
   };
+
+  useEffect(() => {
+    if (fakeCardClicked === cardKey) {
+      setCardTurned(true);
+    }
+  });
 
   useEffect(() => {
     if (matchedFound === true) {

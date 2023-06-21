@@ -18,6 +18,9 @@ const GameBoard = ({ game }) => {
   //Steph: mapping down the elements that have been paired up already and which ones not
   const matchedPairs = game.matches.map((e) => e); //this will give me the URLs of the matched pairs
   const unmatchedPairs = [];
+  // Steph: starting to test the new state here
+  const [fakeCardClicked, setFakeCardClicked] = useState([]);
+  const [wildCardClicked, setWildCardClicked] = useState(null);
 
   game.board.map((e) => {
     if (
@@ -35,6 +38,7 @@ const GameBoard = ({ game }) => {
   //Steph: added new function to implement if wildcard was clicked
   const handleWildCardClick = () => {
     if (cardsClicked.first === null && unmatchedPairs.length > 0) {
+      setWildCardClicked("both cards added");
       // access the first card that has not been matched yet
       const findPairs = unmatchedPairs[0];
       //find it plus its pair in the game board and push into a new array
@@ -53,6 +57,7 @@ const GameBoard = ({ game }) => {
         }));
       }
     } else if (cardsClicked.first !== null && cardsClicked.second === null) {
+      setWildCardClicked("second card added");
       // Find the second part based on the image_url of the first part
       //I got stuck here for a bit until I found out that the indexOf()-method does not work on an array of objects...
       const firstPartImageUrl = game.board[cardsClicked.first].image_url;
@@ -117,6 +122,29 @@ const GameBoard = ({ game }) => {
     } else {
       console.log("Match"); //Steph: No idea why, but there was a glitch where without the console.log, isMatch is never set to "match" even though setMatches(game.matches.length) is updated! No idea why, so I'm leaving the console.log for now
       setIsMatch("match");
+      if (wildCardClicked === "both cards added") {
+        const cards = game.board.filter((e) => e.image_url === firstImageUrl);
+
+        let firstIndex = null;
+        let secondIndex = null;
+
+        for (let i = 0; i < game.board.length; i++) {
+          const currentPart = game.board[i];
+          if (currentPart === cards[0]) {
+            firstIndex = i;
+          } else if (currentPart === cards[1]) {
+            secondIndex = i;
+          } else break;
+        }
+
+        setFakeCardClicked((prevState) => [
+          ...prevState,
+          firstIndex,
+          secondIndex,
+        ]);
+        console.log("Eurika!", game.matches, firstIndex, secondIndex);
+        setWildCardClicked(false);
+      }
       setMatches(game.matches.length);
     }
   };
@@ -188,6 +216,9 @@ const GameBoard = ({ game }) => {
             } else {
               return (
                 <Card
+                  //Steph: below two props added with Judith for the fake clicks of wildcard matches
+                  fakeCardClicked={fakeCardClicked}
+                  cardKey={index}
                   key={index}
                   imgSrc={element.image_url}
                   text={text[index]}
