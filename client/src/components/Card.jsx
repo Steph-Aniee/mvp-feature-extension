@@ -14,6 +14,7 @@ function Card({
   disableClicks,
   cardKey,
   fakeCardClicked,
+  secondFakeCardClicked,
 }) {
   const [isCardTurned, setCardTurned] = useState(false);
   const [matchedFound, setMatchedFound] = useState(false);
@@ -30,6 +31,10 @@ function Card({
 
   useEffect(() => {
     if (fakeCardClicked === cardKey) {
+      setCardTurned(true);
+    }
+
+    if (secondFakeCardClicked === cardKey) {
       setCardTurned(true);
     }
   });

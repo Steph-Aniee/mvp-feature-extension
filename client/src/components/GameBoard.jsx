@@ -19,7 +19,8 @@ const GameBoard = ({ game }) => {
   const matchedPairs = game.matches.map((e) => e); //this will give me the URLs of the matched pairs
   const unmatchedPairs = [];
   // Steph: starting to test the new state here
-  const [fakeCardClicked, setFakeCardClicked] = useState([]);
+  const [fakeCardClicked, setFakeCardClicked] = useState(null);
+  const [secondFakeCardClicked, setSecondFakeCardClicked] = useState(null);
   const [wildCardClicked, setWildCardClicked] = useState(null);
 
   game.board.map((e) => {
@@ -45,7 +46,6 @@ const GameBoard = ({ game }) => {
       const matchingParts = game.board.filter(
         (e) => e.image_url === findPairs.image_url
       );
-      console.log(findPairs, matchingParts); //Steph: log is working now
       if (matchingParts) {
         // ideally, matchingParts should consist of two elements
         const firstCardIndex = game.board.indexOf(matchingParts[0]);
@@ -75,7 +75,6 @@ const GameBoard = ({ game }) => {
       }
 
       if (secondPartIndex !== null) {
-        console.log(game.board[cardsClicked.first]);
         setCardsClicked((prevState) => ({
           ...prevState,
           second: secondPartIndex,
@@ -88,7 +87,6 @@ const GameBoard = ({ game }) => {
     if (disableClicks) return; // Return early if clicks are disabled
     //Steph: check if wildcard was clicked! if yes, only then go into the logic of the wildcard
     if (game.board[index].image_url.includes("golden-card-icon.svg")) {
-      console.log("YES"); //Steph: just checking if this line of code executes
       handleWildCardClick();
     }
 
@@ -123,26 +121,23 @@ const GameBoard = ({ game }) => {
       console.log("Match"); //Steph: No idea why, but there was a glitch where without the console.log, isMatch is never set to "match" even though setMatches(game.matches.length) is updated! No idea why, so I'm leaving the console.log for now
       setIsMatch("match");
       if (wildCardClicked === "both cards added") {
-        const cards = game.board.filter((e) => e.image_url === firstImageUrl);
+        const cardOne = game.board.findIndex(
+          (e) => e.image_url === firstImageUrl
+        );
+        const cardTwo = game.board.findLastIndex(
+          (e) => e.image_url === secondImageUrl
+        );
 
-        let firstIndex = null;
-        let secondIndex = null;
-
-        for (let i = 0; i < game.board.length; i++) {
-          const currentPart = game.board[i];
-          if (currentPart === cards[0]) {
-            firstIndex = i;
-          } else if (currentPart === cards[1]) {
-            secondIndex = i;
-          } else break;
-        }
-
-        setFakeCardClicked((prevState) => [
-          ...prevState,
-          firstIndex,
-          secondIndex,
-        ]);
-        console.log("Eurika!", game.matches, firstIndex, secondIndex);
+        setFakeCardClicked(cardOne);
+        setSecondFakeCardClicked(cardTwo);
+        console.log("Eurika!", cardTwo, cardOne, game.matches);
+        setWildCardClicked(false);
+      }
+      if (wildCardClicked === "second card added") {
+        const cardTwo = game.board.findLastIndex(
+          (e) => e.image_url === secondImageUrl
+        );
+        setSecondFakeCardClicked(cardTwo);
         setWildCardClicked(false);
       }
       setMatches(game.matches.length);
@@ -219,6 +214,8 @@ const GameBoard = ({ game }) => {
                   //Steph: below two props added with Judith for the fake clicks of wildcard matches
                   fakeCardClicked={fakeCardClicked}
                   cardKey={index}
+                  // plus one more prop after debugging
+                  secondFakeCardClicked={secondFakeCardClicked}
                   key={index}
                   imgSrc={element.image_url}
                   text={text[index]}
