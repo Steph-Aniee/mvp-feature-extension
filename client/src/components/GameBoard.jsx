@@ -127,14 +127,12 @@ const GameBoard = ({ game }) => {
 
         setFakeCardClicked(cardOne);
         setSecondFakeCardClicked(cardTwo);
-        setWildCardClicked(null);
       }
       if (wildCardClicked === "second card added") {
         const cardTwoo = game.board.findLastIndex(
           (e) => e.image_url === secondImageUrl
         );
         setSecondFakeCardClicked(cardTwoo);
-        setWildCardClicked(null);
       }
       setMatches(game.matches.length);
     }
