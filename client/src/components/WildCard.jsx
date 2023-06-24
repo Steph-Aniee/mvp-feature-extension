@@ -6,15 +6,7 @@ import CardBack from "./CardBack";
 // Data
 import { Animals } from "./animals";
 
-function WildCard({
-  handleCardClickCallback,
-  disableClicks,
-  isMatch,
-  board,
-  cardsClicked,
-  setCardsClicked,
-  handleWildCardClick,
-}) {
+function WildCard({ disableClicks, handleWildCardClick }) {
   const [isCardFlipped, setCardFlipped] = useState(false);
   const [backImageUrl, setBackImageUrl] = useState(
     Animals[Math.floor(Math.random() * Animals.length)].image_url

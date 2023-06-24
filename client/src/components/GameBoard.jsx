@@ -23,20 +23,18 @@ const GameBoard = ({ game }) => {
   const [secondFakeCardClicked, setSecondFakeCardClicked] = useState(null);
   const [wildCardClicked, setWildCardClicked] = useState(null);
 
+  //Steph: making sure that the wildcard itself will be excluded from the array of unmatched cards, so that it cannot pick itself for the rest of its logic
   game.board.map((e) => {
     if (
       !matchedPairs.includes(e.image_url) &&
       e.image_url !==
         "https://cdn.bfldr.com/Z0BJ31FP/at/vjc7chngjc36vgpxmr3fhm7x/golden-card-icon.svg"
     ) {
-      unmatchedPairs.push(e);
+      unmatchedPairs.push(e); // pushing all other cards to the unmatched batch at the beginning of the game
     }
   });
 
-  console.log(unmatchedPairs);
-  console.log(matchedPairs);
-
-  //Steph: added new function to implement if wildcard was clicked
+  //Steph: added new function to implement its ogic if the wildcard was clicked
   const handleWildCardClick = () => {
     if (cardsClicked.first === null && unmatchedPairs.length > 0) {
       setWildCardClicked("both cards added");
@@ -85,7 +83,7 @@ const GameBoard = ({ game }) => {
 
   const handleCardClickCallback = (index) => {
     if (disableClicks) return; // Return early if clicks are disabled
-    //Steph: check if wildcard was clicked! if yes, only then go into the logic of the wildcard
+    //Steph: check if wildcard was clicked; if yes, only then go into the logic of the wildcard
     if (game.board[index].image_url.includes("golden-card-icon.svg")) {
       handleWildCardClick();
     }
@@ -130,7 +128,6 @@ const GameBoard = ({ game }) => {
 
         setFakeCardClicked(cardOne);
         setSecondFakeCardClicked(cardTwo);
-        console.log("Eurika!", cardTwo, cardOne, game.matches);
         setWildCardClicked(false);
       }
       if (wildCardClicked === "second card added") {
@@ -179,7 +176,7 @@ const GameBoard = ({ game }) => {
   }, [game.board]);
 
   useEffect(() => {
-    //Steph: Add minus 1 here in the calculation to not count the wildcard
+    //Steph: Added minus 1 here in the calculation to not count the wildcard
     if (matches === (game.board.length - 1) / 2 && isMatch === "match") {
       setTimeout(() => {
         setIsWon(true);
@@ -199,13 +196,8 @@ const GameBoard = ({ game }) => {
               return (
                 <WildCard
                   key={index}
-                  handleCardClickCallback={() => handleCardClickCallback(index)}
                   handleWildCardClick={handleWildCardClick}
-                  isMatch={isMatch}
                   disableClicks={disableClicks}
-                  board={game.board}
-                  cardsClicked={cardsClicked}
-                  setCardsClicked={setCardsClicked}
                 />
               );
             } else {
