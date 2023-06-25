@@ -119,7 +119,9 @@ const GameBoard = ({ game }) => {
       setIsMatch("match");
 
       if (wildCardClicked) {
-        alert("Yaay! You clicked the wildcard.");
+        setTimeout(() => {
+          alert("Yaay! You clicked the wildcard.");
+        }, 300);
       }
 
       setTimeout(() => {
