@@ -117,24 +117,33 @@ const GameBoard = ({ game }) => {
     } else {
       console.log("Match"); //Steph: No idea why, but there was a glitch where without the console.log, isMatch is never set to "match" even though setMatches(game.matches.length) is updated! No idea why, so I'm leaving the console.log for now
       setIsMatch("match");
-      if (wildCardClicked === "both cards added") {
-        const cardOne = game.board.findIndex(
-          (e) => e.image_url === firstImageUrl
-        );
-        const cardTwo = game.board.findLastIndex(
-          (e) => e.image_url === secondImageUrl
-        );
 
-        setFakeCardClicked(cardOne);
-        setSecondFakeCardClicked(cardTwo);
+      if (wildCardClicked) {
+        alert("Yaay! You clicked the wildcard.");
       }
-      if (wildCardClicked === "second card added") {
-        const cardTwoo = game.board.findLastIndex(
-          (e) => e.image_url === secondImageUrl
-        );
-        setSecondFakeCardClicked(cardTwoo);
-      }
-      setMatches(game.matches.length);
+
+      setTimeout(() => {
+        if (wildCardClicked === "both cards added") {
+          const cardOne = game.board.findIndex(
+            (e) => e.image_url === firstImageUrl
+          );
+          const cardTwo = game.board.findLastIndex(
+            (e) => e.image_url === secondImageUrl
+          );
+
+          setFakeCardClicked(cardOne);
+          setSecondFakeCardClicked(cardTwo);
+        }
+        if (wildCardClicked === "second card added") {
+          const cardTwoo = game.board.findLastIndex(
+            (e) => e.image_url === secondImageUrl
+          );
+          setSecondFakeCardClicked(cardTwoo);
+        }
+        setMatches(game.matches.length);
+
+        setWildCardClicked(null);
+      }, 1000);
     }
   };
 
