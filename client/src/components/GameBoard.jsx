@@ -54,12 +54,12 @@ const GameBoard = ({ game }) => {
           second: secondCardIndex,
         }));
       }
-    } else if (cardsClicked.first !== null && cardsClicked.second === null) {
+    } else if (cardsClicked.first !== null) {
       setWildCardClicked("second card added");
       // Find the second part based on the image_url of the first part
       const firstPartImageUrl = game.board[cardsClicked.first].image_url;
       let secondPartIndex = null;
-
+      //Steph: needed a loop here because indexOf or findIndex methods won't work properly on array of objects here
       for (let i = 0; i < game.board.length; i++) {
         const currentPart = game.board[i];
         if (
@@ -137,10 +137,18 @@ const GameBoard = ({ game }) => {
           setSecondFakeCardClicked(cardTwo);
         }
         if (wildCardClicked === "second card added") {
-          const cardTwoo = game.board.findLastIndex(
-            (e) => e.image_url === secondImageUrl
-          );
-          setSecondFakeCardClicked(cardTwoo);
+          const cardOne = cardsClicked.first;
+          let cardTwo = null;
+          //Steph: needed a classic loop here too as in line 63
+          for (let i = 0; i < game.board.length; i++) {
+            const element = game.board[i];
+            if (element.image_url === secondImageUrl && i !== cardOne) {
+              cardTwo = i;
+              break;
+            }
+          }
+          setFakeCardClicked(cardOne);
+          setSecondFakeCardClicked(cardTwo);
         }
         setMatches(game.matches.length);
 
